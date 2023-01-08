@@ -41,7 +41,7 @@ ob_start();
                 // read current record's data
                 try {
                     // prepare select query
-                    $query = "SELECT UserID, username, password, email, gender, role FROM users WHERE UserID = ? LIMIT 0,1";
+                    $query = "SELECT userID, username, password, email, gender, role FROM users WHERE userID = ? LIMIT 0,1";
                     $stmt = $con->prepare($query);
 
                     // this is the first question mark
@@ -94,12 +94,12 @@ ob_start();
                             // write update query
                             // in this case, it seemed like we have so many fields to pass and
                             // it is better to label them and not use question marks
-                            $query = "UPDATE users SET password=:password, username=:username, email=:email, gender=:gender, role=:role WHERE UserID=:UserID";
+                            $query = "UPDATE users SET password=:password, username=:username, email=:email, gender=:gender, role=:role WHERE userID=:userID";
                             // prepare query for execution
                             $stmt = $con->prepare($query);
 
                             // bind the parameters
-                            $stmt->bindParam(":UserID", $id);
+                            $stmt->bindParam(":userID", $id);
                             if ($new_password == "" && $confirm_password == "") {
                                 $stmt->bindParam(':password', $pass);
                             } else {

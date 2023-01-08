@@ -39,7 +39,7 @@ include 'check_session.php';
                 $id = isset($_GET['id']) ? $_GET['id'] : "";
 
                 if ($message == "update_success" && $id != "") {
-                    echo "<div class='alert alert-success'>Record with <b class='fs-2'> UserID : $id </b> updated.</div>";
+                    echo "<div class='alert alert-success'>Record with <b class='fs-2'> userID : $id </b> updated.</div>";
                 } else if ($message == "update_success") {
                     echo "<div class='alert alert-success'>Record was updated.</div>";
                 } else if ($message == "create_success") {
@@ -57,7 +57,7 @@ include 'check_session.php';
             // delete message prompt will be here
 
             // select all data
-            $query = "SELECT UserID, username, email, role, register_date FROM users ORDER BY UserID ASC";
+            $query = "SELECT userID, username, email, role, register_date FROM users ORDER BY userID ASC";
             $stmt = $con->prepare($query);
             $stmt->execute();
 
@@ -73,7 +73,7 @@ include 'check_session.php';
                 echo "<table class='table table-hover table-bordered align-middle'>"; //start table
                 //creating our table heading
                 echo "<tr>";
-                echo "<th>UserID</th>";
+                echo "<th>userID</th>";
                 echo "<th>Username</th>";
                 echo "<th>Email</th>";
                 echo "<th>Role</th>";
@@ -87,7 +87,7 @@ include 'check_session.php';
                     extract($row);
                     // creating new table row per record
                     echo "<tr>";
-                    echo "<td>{$UserID}</td>";
+                    echo "<td>{$userID}</td>";
                     // echo "<td>{$password}</td>";
                     echo "<td>{$username}</td>";
                     echo "<td>{$email}</td>";
@@ -99,10 +99,10 @@ include 'check_session.php';
                     echo "<div class='row'>";
 
                     // we will use this links on next part of this post
-                    echo "<a href='admin_users_update.php?id={$UserID}' class='btn btn-primary col-11 col-lg m-auto me-lg-1 mt-2 mt-lg-0'>Edit</a>";
+                    echo "<a href='admin_users_update.php?id={$userID}' class='btn btn-primary col-11 col-lg m-auto me-lg-1 mt-2 mt-lg-0'>Edit</a>";
 
                     // we will use this links on next part of this post
-                    echo "<a href='#' onclick='delete_customer({$UserID});' class='btn btn-danger col-11 col-lg m-auto mt-2 mt-xl-0'>Delete</a>";
+                    echo "<a href='#' onclick='delete_customer({$userID});' class='btn btn-danger col-11 col-lg m-auto mt-2 mt-xl-0'>Delete</a>";
                     echo "</div>";
                     echo "</td>";
                     echo "</tr>";

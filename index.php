@@ -49,12 +49,12 @@ session_start();
     }
 
     if ($_POST) {
-        $UserID = trim($_POST['UserID']);
+        $userID = trim($_POST['userID']);
         $pass = trim($_POST['password']);
 
         $validate = true;
 
-        if ($UserID == "") {
+        if ($userID == "") {
             echo "<div class='alert alert-danger align-item-center'>Please enter your ID</div>";
             $validate = false;
         }
@@ -69,10 +69,10 @@ session_start();
             try {
 
                 // prepare select query
-                $query = "SELECT UserID, password, role FROM users WHERE UserID = :UserID";
+                $query = "SELECT userID, password, role FROM users WHERE userID = :userID";
                 $stmt = $con->prepare($query);
 
-                $stmt->bindParam(':UserID', $UserID);
+                $stmt->bindParam(':userID', $userID);
                 // execute our query
                 $stmt->execute();
 
@@ -87,12 +87,21 @@ session_start();
                     if (md5($pass) == $password) {
                         switch ($role) {
                             case "Admin":
-                                $_SESSION["UserID"] = $UserID;
+                                $_SESSION["userID"] = $userID;
                                 $_SESSION["password"] = $password;
                                 $_SESSION["role"] = $role;
 
                                 header("Location: admin_users_list.php");
                                 break;
+
+                            case "User":
+                                $_SESSION["userID"] = $userID;
+                                $_SESSION["password"] = $password;
+                                $_SESSION["role"] = $role;
+
+                                header("Location: user_dashboard.php");
+                                break;
+
                             default:
                                 echo "<div class='alert alert-danger align-item-center'>Unknown account role.</div>";
                         }
@@ -119,8 +128,8 @@ session_start();
             <h1 class="h3 mb-3 fw-normal fw-bold">Please sign in</h1>
 
             <div class="form-floating">
-                <input id="UserID" type="text" class="form-control" name="UserID" placeholder="UserID">
-                <label for="UserID">UserID</label>
+                <input id="userID" type="text" class="form-control" name="userID" placeholder="userID">
+                <label for="userID">userID</label>
             </div>
             <div class="form-floating">
                 <input id="password" type="password" class="form-control" name="password" placeholder="Password">

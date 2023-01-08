@@ -35,7 +35,7 @@ ob_start();
             $file_upload_error_messages = "";
 
             if ($_POST) {
-                $UserID = trim($_POST['UserID']);
+                $userID = trim($_POST['userID']);
                 $password = $_POST['password'];
                 $confirm_password = $_POST['confirm_password'];
                 $username = $_POST['username'];
@@ -46,7 +46,7 @@ ob_start();
                 $validation = true;
 
                 // Check Empty
-                if ($UserID == "" || $password == "" || $username == "" || $email == "" || $role == "") {
+                if ($userID == "" || $password == "" || $username == "" || $email == "" || $role == "") {
                     $file_upload_error_messages .= "<div class='alert alert-danger'>Please make sure all fields are not empty</div>";
                     $validation = false;
                 }
@@ -57,9 +57,9 @@ ob_start();
                 // delete message prompt will be here
 
                 // select all data
-                $query_check = "SELECT UserID FROM users WHERE UserID=:UserID";
+                $query_check = "SELECT userID FROM users WHERE userID=:userID";
                 $stmt_check = $con->prepare($query_check);
-                $stmt_check->bindParam(':UserID', $UserID);
+                $stmt_check->bindParam(':userID', $userID);
 
                 $stmt_check->execute();
 
@@ -77,12 +77,12 @@ ob_start();
 
                     try {
                         // insert query
-                        $query = "INSERT INTO users SET UserID=:UserID, password=:password, username=:username, gender=:gender, email=:email, role=:role ,register_date=:register_date";
+                        $query = "INSERT INTO users SET userID=:userID, password=:password, username=:username, gender=:gender, email=:email, role=:role ,register_date=:register_date";
                         // prepare query for execution
                         $stmt = $con->prepare($query);
 
                         // bind the parameters
-                        $stmt->bindParam(':UserID', $UserID);
+                        $stmt->bindParam(':userID', $userID);
                         $stmt->bindParam(':password', md5($password));
                         $stmt->bindParam(':username', $username);
                         $stmt->bindParam(':email', $email);
@@ -120,10 +120,10 @@ ob_start();
             <!-- html form here where the product information will be entered -->
             <form action="<?php echo $_SERVER["PHP_SELF"]; ?>" method="POST" enctype="multipart/form-data">
                 <div class="m-auto">
-                    <p class="fw-bold">UserID</p>
+                    <p class="fw-bold">userID</p>
                     <div class="input-group input-group-lg mb-3">
                         <span class="input-group-text" id="basic-addon1">@</span>
-                        <input type="text" class="form-control" name="UserID" value="<?php echo isset($UserID) ? $UserID : ""; ?>" placeholder="UserID" aria-label="UserID" aria-describedby="basic-addon1" />
+                        <input type="text" class="form-control" name="userID" value="<?php echo isset($userID) ? $userID : ""; ?>" placeholder="userID" aria-label="userID" aria-describedby="basic-addon1" />
                     </div>
                 </div>
                 <div class="d-md-flex row">

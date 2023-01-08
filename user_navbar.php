@@ -38,10 +38,10 @@ include 'config/database.php';
             <div class="collapse navbar-collapse d-md-flex justify-content-end" id="navbarCollapse">
                 <ul class="navbar-nav mb-2 mb-md-0">
                     <li class="nav-item align-self-md-center">
-                        <a class="nav-link <?php echo active("admin_users_list.php") ?>" aria-current="page" href="admin_users_list.php">UserList</a>
+                        <a class="nav-link <?php echo active("user_complaints_list.php") ?>" aria-current="page" href="admin_users_list.php">Complaint List</a>
                     </li>
                     <li class="nav-item align-self-md-center">
-                        <a class="nav-link <?php echo active("admin_users_create.php") ?>" aria-current="page" href="admin_users_create.php">Create User</a>
+                        <a class="nav-link <?php echo active("user_complaints_create.php") ?>" aria-current="page" href="admin_users_create.php">Create Complaint</a>
                     </li>
                     <li class="nav-item align-self-md-center">
                         <a class="btn btn-danger ms-0 ms-md-4 mt-3 mt-md-0" href="logout.php">LOGOUT</a>

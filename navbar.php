@@ -18,7 +18,7 @@ function active_startwith($pagename_start)
     return startsWith(basename($_SERVER["PHP_SELF"]), "$pagename_start") ? "active" : "";
 }
 
-$current_user = $_SESSION["UserID"];
+$current_user = $_SESSION["userID"];
 
 include 'config/database.php';
 
@@ -38,7 +38,7 @@ include 'config/database.php';
             <div class="collapse navbar-collapse d-md-flex justify-content-end" id="navbarCollapse">
                 <ul class="navbar-nav mb-2 mb-md-0">
                     <li class="nav-item align-self-md-center">
-                        <a class="nav-link <?php echo active("welcome_page.php") ?>" aria-current="page" href="welcome_page.php">Dashboard</a>
+                        <a class="nav-link <?php echo active("users_dashboard.php") ?>" aria-current="page" href="users_dashboard.php">Dashboard</a>
                     </li>
                     <li class="nav-item dropdown align-self-md-center">
                         <a class="nav-link dropdown-toggle <?php echo active_startwith("product") ?>" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
