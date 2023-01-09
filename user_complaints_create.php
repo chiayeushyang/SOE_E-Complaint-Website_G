@@ -32,7 +32,6 @@ ob_start();
 
             <!-- html form to create product will be here -->
             <?php
-            $file_upload_error_messages = "";
             $userID = $_SESSION['userID'];
 
             if ($_POST) {

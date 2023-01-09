@@ -80,6 +80,6 @@ catch (PDOException $exception) {
     die('ERROR: ' . $exception->getMessage());
 }
 } else {
-    header("Location: user_complaints_list?message=No file found.");
+    header("Location: user_complaints_list?message=no_file_found");
 }
 ?>

@@ -27,7 +27,6 @@ if (isset($_FILES['files'])) {
     if (!is_dir($target_directory)) {
         mkdir($target_directory, 0777, true);
     }
-    $file_upload_error_messages = '';
 
     if (empty($file_upload_error_messages)) {
         //so try to upload the file
@@ -47,10 +46,8 @@ if (isset($_FILES['files'])) {
 
                 $stmt_inset->execute();
             } else {
-                echo "<div class='alert alert-danger'>";
-                echo "<div>Unable to upload file.</div>";
-                echo "<div>Update the record to upload file.</div>";
-                echo "</div>";
+                $file_upload_error_messages .= "<div>Unable to upload file.</div>";
+                $file_upload_error_messages .= "<div>Update the record to upload file.</div>";
             }
         }
     }

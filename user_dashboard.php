@@ -179,7 +179,6 @@ include 'check_session.php';
                     </div>
                     <div class="col-12 col-md-4 ms-auto mt-md-0 mt-5 d-flex justify-content-end me-0 me-md-5">
                     <a class="btn btn-lg btn-primary rounded text-center " href="user_complaints_create.php" role="button">Create New Complaint</a>
-                    <a class="btn btn-lg btn-primary rounded text-center " href="download.php?id=9" role="button">Download</a>
                     </div>
                 </div>
             </div>
