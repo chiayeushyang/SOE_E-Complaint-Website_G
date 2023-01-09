@@ -48,7 +48,10 @@ include 'check_session.php';
     try {
         $query = "SELECT * FROM 
                 (SELECT username as 'current_user' FROM users INNER JOIN complaint ON complaint.userID = users.userID WHERE users.userID=:userID) as u,
-                (SELECT COUNT(status) as 'user_done' FROM users INNER JOIN complaint ON complaint.userID = users.userID WHERE status=:Done) as u_d,
+                (SELECT COUNT(status) as 'user_done' FROM users INNER JOIN complaint ON complaint.userID = users.userID WHERE users.userID=:userID AND status=:Done) as u_d,
+                (SELECT COUNT(status) as 'user_pending' FROM users INNER JOIN complaint ON complaint.userID = users.userID WHERE users.userID=:userID AND status=:Pending) as u_p,
+                (SELECT COUNT(status) as 'user_active' FROM users INNER JOIN complaint ON complaint.userID = users.userID WHERE users.userID=:userID AND status=:Active) as u_a,
+                (SELECT COUNT(status) as 'user_KIV' FROM users INNER JOIN complaint ON complaint.userID = users.userID WHERE users.userID=:userID AND status=:KIV) as u_k,
                 (SELECT COUNT(complaintID) as total_complaint FROM complaint) as t, 
                 (SELECT COUNT(status) as new_complaint FROM complaint WHERE status=:New) as n, 
                 (SELECT COUNT(status) as pending_complaint FROM complaint WHERE status=:Pending) as p, 
@@ -114,7 +117,6 @@ include 'check_session.php';
         $stmt_user_KIV->execute();
 
         $num_user_KIV = $stmt_user_KIV->rowCount();
-
     } catch (PDOException $exception) {
         die('ERROR: ' . $exception->getMessage());
     }
@@ -156,21 +158,26 @@ include 'check_session.php';
                 </div>
                 <div class="col-12 col-md-3">
                     <div class="p-3 bg-white border rounded text-center">
-                        <h4 class="fw-semibold text-black text-opacity-75">Total Done <br> <?php echo "<a href='order_read.php' class='text-decoration-none'><p class='my-2 fs-3 text-black fw-bolder'>$done_complaint</p></a>" ?></h4>
+                        <h4 class="fw-semibold text-black text-opacity-75">Total Done <br> <?php echo "<p class='my-2 fs-3 text-black fw-bolder'>$done_complaint</p>" ?></h4>
                     </div>
                 </div>
             </div>
             <div class="gx-0 gx-md-5 gy-5 mt-5">
                 <h3 class="fw-semibold text-light">User Complaints</h3>
-                <div class="col-md-4 p-3 bg-white border rounded text-center">
-                    <h4 class="fw-semibold text-black text-opacity-75">Total Done <br> <?php echo "<a href='order_read.php' class='text-decoration-none'><p class='my-2 fs-3 text-black fw-bolder'>$user_done</p></a>" ?></h4>
+                <div class="d-md-flex d-block align-items-center">
+                    <div class="col-12 col-md-4 p-3 bg-white border rounded text-center">
+                        <h4 class="fw-semibold text-black text-opacity-75">Total Done <br> <?php echo "<p class='my-2 fs-3 text-black fw-bolder'>$user_done</p>" ?></h4>
+                    </div>
+                    <div class="col-12 col-md-4 ms-auto mt-md-0 mt-5 d-flex justify-content-end me-0 me-md-5">
+                    <a class="btn btn-lg btn-primary rounded text-center " href="user_complaint_create" role="button">Create New Complaint</a>
+                    </div>
                 </div>
             </div>
             <div class="accordion mt-5" id="accordionExample">
                 <div class="accordion-item">
                     <h2 class="accordion-header" id="headingOne">
                         <button class="accordion-button collapsed fs-4 fw-semibold text-black text-opacity-75" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne" aria-expanded="false" aria-controls="collapseOne">
-                            Pending
+                            Pending <?php echo "<b class='w-bold ms-4'>$user_pending</b>" ?>
                         </button>
                     </h2>
                     <div id="collapseOne" class="accordion-collapse collapse" aria-labelledby="headingOne" data-bs-parent="#accordionExample">
@@ -178,7 +185,7 @@ include 'check_session.php';
                         $index = 1;
                         while ($row_user_pending = $stmt_user_pending->fetch(PDO::FETCH_ASSOC)) {
 
-                            extract($row_user_pending); 
+                            extract($row_user_pending);
                             echo "<div class='accordion-body row px-4 justify-content-center mt-2'>";
                             echo "<div class='col-1 p-3 border bg-light me-2 rounded text-center'> $index </div>";
                             echo "<div class='col-10 p-3 border bg-light rounded'> $pending_title </div>";
@@ -192,7 +199,7 @@ include 'check_session.php';
                 <div class="accordion-item">
                     <h2 class="accordion-header" id="headingtwo">
                         <button class="accordion-button collapsed fs-4 fw-semibold text-black text-opacity-75" type="button" data-bs-toggle="collapse" data-bs-target="#collapsetwo" aria-expanded="true" aria-controls="collapsetwo">
-                            Active
+                            Active <?php echo "<b class='w-bold ms-4'>$user_active</b>" ?>
                         </button>
                     </h2>
                     <div id="collapsetwo" class="accordion-collapse collapse" aria-labelledby="headingtwo" data-bs-parent="#accordionExample2">
@@ -200,7 +207,7 @@ include 'check_session.php';
                         $index = 1;
                         while ($row_user_active = $stmt_user_active->fetch(PDO::FETCH_ASSOC)) {
 
-                            extract($row_user_active); 
+                            extract($row_user_active);
                             echo "<div class='accordion-body row px-4 justify-content-center mt-2'>";
                             echo "<div class='col-1 p-3 border bg-light me-2 rounded text-center'> $index </div>";
                             echo "<div class='col-10 p-3 border bg-light rounded'> $active_title </div>";
@@ -214,7 +221,7 @@ include 'check_session.php';
                 <div class="accordion-item">
                     <h2 class="accordion-header" id="headingthree">
                         <button class="accordion-button collapsed fs-4 fw-semibold text-black text-opacity-75" type="button" data-bs-toggle="collapse" data-bs-target="#collapsethree" aria-expanded="true" aria-controls="collapsethree">
-                            Keep In View
+                            Keep In View <?php echo "<b class='w-bold ms-4'>$user_KIV</b>" ?>
                         </button>
                     </h2>
                     <div id="collapsethree" class="accordion-collapse collapse" aria-labelledby="headingthree" data-bs-parent="#accordionExample3">
@@ -222,7 +229,7 @@ include 'check_session.php';
                         $index = 1;
                         while ($row_user_KIV = $stmt_user_KIV->fetch(PDO::FETCH_ASSOC)) {
 
-                            extract($row_user_KIV); 
+                            extract($row_user_KIV);
                             echo "<div class='accordion-body row px-4 justify-content-center mt-2'>";
                             echo "<div class='col-1 p-3 border bg-light me-2 rounded text-center'> $index </div>";
                             echo "<div class='col-10 p-3 border bg-light rounded'> $KIV_title </div>";
