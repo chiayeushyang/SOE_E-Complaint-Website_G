@@ -37,6 +37,9 @@ include 'config/database.php';
 
             <div class="collapse navbar-collapse d-md-flex justify-content-end" id="navbarCollapse">
                 <ul class="navbar-nav mb-2 mb-md-0">
+                <li class="nav-item align-self-md-center">
+                        <a class="nav-link <?php echo active("user_dashboard.php") ?>" aria-current="page" href="user_dashboard.php">Dashboard</a>
+                    </li>
                     <li class="nav-item align-self-md-center">
                         <a class="nav-link <?php echo active("user_complaints_list.php") ?>" aria-current="page" href="user_complaints_list.php">Complaint List</a>
                     </li>

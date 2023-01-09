@@ -49,7 +49,7 @@ include 'check_session.php';
         $query = "SELECT * FROM 
                 (SELECT username as 'current_user' FROM users INNER JOIN complaint ON complaint.userID = users.userID WHERE users.userID=:userID) as u,
                 (SELECT COUNT(status) as 'user_done' FROM users INNER JOIN complaint ON complaint.userID = users.userID WHERE users.userID=:userID AND status=:Done) as u_d,
-                (SELECT COUNT(status) as 'user_pending' FROM users INNER JOIN complaint ON complaint.userID = users.userID WHERE users.userID=:userID AND status=:Pending) as u_p,
+                (SELECT COUNT(status) as 'user_pending' FROM users INNER JOIN complaint ON complaint.userID = users.userID WHERE users.userID=:userID AND status=:Pending OR status=:New) as u_p,
                 (SELECT COUNT(status) as 'user_active' FROM users INNER JOIN complaint ON complaint.userID = users.userID WHERE users.userID=:userID AND status=:Active) as u_a,
                 (SELECT COUNT(status) as 'user_KIV' FROM users INNER JOIN complaint ON complaint.userID = users.userID WHERE users.userID=:userID AND status=:KIV) as u_k,
                 (SELECT COUNT(complaintID) as total_complaint FROM complaint) as t, 
@@ -57,13 +57,15 @@ include 'check_session.php';
                 (SELECT COUNT(status) as pending_complaint FROM complaint WHERE status=:Pending) as p, 
                 (SELECT COUNT(status) as KIV_complaint FROM complaint WHERE status=:KIV) as k, 
                 (SELECT COUNT(status) as active_complaint FROM complaint WHERE status=:Active) as a, 
-                (SELECT COUNT(status) as done_complaint FROM complaint WHERE status=:Done) as d";
+                (SELECT COUNT(status) as done_complaint FROM complaint WHERE status=:Done) as d,
+                (SELECT COUNT(status) as other_complaint FROM complaint WHERE status=:Other) as o";
 
         $new = "New";
         $pending = "Pending";
         $KIV = "KIV";
         $done = "Done";
         $active = "Active";
+        $other = "Other";
 
         $stmt = $con->prepare($query);
         $stmt->bindParam(':userID', $current_userID);
@@ -72,6 +74,7 @@ include 'check_session.php';
         $stmt->bindParam(':KIV', $KIV);
         $stmt->bindParam(':Done', $done);
         $stmt->bindParam(':Active', $active);
+        $stmt->bindParam(':Other', $other);
 
         $stmt->execute();
 
@@ -83,19 +86,20 @@ include 'check_session.php';
         }
 
         //pending
-        $query_user_pending = "SELECT title as pending_title, status FROM users INNER JOIN complaint ON complaint.userID = users.userID WHERE users.userID=:userID AND status=:Pending";
+        $query_user_pending = "SELECT title as pending_title, status FROM users INNER JOIN complaint ON complaint.userID = users.userID WHERE users.userID=:userID AND status=:Pending OR status=:New ORDER BY complaint_date DESC";
 
         $stmt_user_pending = $con->prepare($query_user_pending);
 
         $stmt_user_pending->bindParam(':userID', $current_userID);
         $stmt_user_pending->bindParam(':Pending', $pending);
+        $stmt_user_pending->bindParam(':New', $new);
 
         $stmt_user_pending->execute();
 
         $num_user_pending = $stmt_user_pending->rowCount();
 
         //active
-        $query_user_active = "SELECT title as active_title, status FROM users INNER JOIN complaint ON complaint.userID = users.userID WHERE users.userID=:userID AND status=:Active";
+        $query_user_active = "SELECT title as active_title, status FROM users INNER JOIN complaint ON complaint.userID = users.userID WHERE users.userID=:userID AND status=:Active ORDER BY complaint_date DESC";
 
         $stmt_user_active = $con->prepare($query_user_active);
 
@@ -107,7 +111,7 @@ include 'check_session.php';
         $num_user_active = $stmt_user_active->rowCount();
 
         //KIV
-        $query_user_KIV = "SELECT title as KIV_title, status FROM users INNER JOIN complaint ON complaint.userID = users.userID WHERE users.userID=:userID AND status=:KIV";
+        $query_user_KIV = "SELECT title as KIV_title, status FROM users INNER JOIN complaint ON complaint.userID = users.userID WHERE users.userID=:userID AND status=:KIV ORDER BY complaint_date DESC";
 
         $stmt_user_KIV = $con->prepare($query_user_KIV);
 
@@ -161,6 +165,11 @@ include 'check_session.php';
                         <h4 class="fw-semibold text-black text-opacity-75">Total Done <br> <?php echo "<p class='my-2 fs-3 text-black fw-bolder'>$done_complaint</p>" ?></h4>
                     </div>
                 </div>
+                <div class="col-12 col-md-3">
+                    <div class="p-3 bg-white border rounded text-center">
+                        <h4 class="fw-semibold text-black text-opacity-75">Total Others <br> <?php echo "<p class='my-2 fs-3 text-black fw-bolder'>$other_complaint</p>" ?></h4>
+                    </div>
+                </div>
             </div>
             <div class="gx-0 gx-md-5 gy-5 mt-5">
                 <h3 class="fw-semibold text-light">User Complaints</h3>
@@ -170,7 +179,7 @@ include 'check_session.php';
                     </div>
                     <div class="col-12 col-md-4 ms-auto mt-md-0 mt-5 d-flex justify-content-end me-0 me-md-5">
                     <a class="btn btn-lg btn-primary rounded text-center " href="user_complaints_create.php" role="button">Create New Complaint</a>
-                    <a class="btn btn-lg btn-primary rounded text-center " href="download.php" role="button">Download</a>
+                    <a class="btn btn-lg btn-primary rounded text-center " href="download.php?id=9" role="button">Download</a>
                     </div>
                 </div>
             </div>

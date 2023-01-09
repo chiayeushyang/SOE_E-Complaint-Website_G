@@ -19,7 +19,7 @@ ob_start();
 <body>
     <!-- NAVBAR -->
     <?php
-    include "admin_navbar.php";
+    include "user_navbar.php";
     ?>
     <!-- NAVBAR END -->
     <main>
@@ -77,7 +77,7 @@ ob_start();
 
                         // Execute the query
                         if ($stmt->execute()) {
-                            header("Location: admin_users_list.php?message=create_success");
+                            header("Location: user_complaints_list.php?message=create_success");
                             ob_end_flush();
                         } else {
                             if (file_exists($target_file)) {
