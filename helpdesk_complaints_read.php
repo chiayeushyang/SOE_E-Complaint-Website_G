@@ -206,7 +206,7 @@ ob_start();
                             <th>Categories</th>
                             <td class="text-center">
                                 <select class="form-select" name='categories'>
-                                <option>Select a categories</option>
+                                <option value="">Select a categories</option>
                                     <?php
                                     $query_prev = "SELECT categories FROM complaint WHERE complaintID=:complaintID";
                                     $stmt_prev = $con->prepare($query_prev);
