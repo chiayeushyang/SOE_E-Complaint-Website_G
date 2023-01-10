@@ -102,6 +102,14 @@ session_start();
                                 header("Location: user_dashboard.php");
                                 break;
 
+                            case "Helpdesk":
+                                $_SESSION["userID"] = $userID;
+                                $_SESSION["password"] = $password;
+                                $_SESSION["role"] = $role;
+
+                                header("Location: helpdesk_dashboard.php");
+                                break;
+
                             default:
                                 echo "<div class='alert alert-danger align-item-center'>Unknown account role.</div>";
                         }

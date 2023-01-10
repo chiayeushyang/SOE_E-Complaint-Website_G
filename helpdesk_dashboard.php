@@ -34,7 +34,7 @@ include 'check_session.php';
 <body>
     <!-- NAVBAR -->
     <?php
-    include "user_navbar.php";
+    include "helpdesk_navbar.php";
     ?>
     <!-- NAVBAR END -->
 
@@ -47,11 +47,6 @@ include 'check_session.php';
 
     try {
         $query = "SELECT * FROM 
-                (SELECT username as 'current_user' FROM users INNER JOIN complaint ON complaint.userID = users.userID WHERE users.userID=:userID) as u,
-                (SELECT COUNT(status) as 'user_done' FROM users INNER JOIN complaint ON complaint.userID = users.userID WHERE users.userID=:userID AND status=:Done) as u_d,
-                (SELECT COUNT(status) as 'user_pending' FROM users INNER JOIN complaint ON complaint.userID = users.userID WHERE users.userID=:userID AND (status=:Pending OR status=:New)) as u_p,
-                (SELECT COUNT(status) as 'user_active' FROM users INNER JOIN complaint ON complaint.userID = users.userID WHERE users.userID=:userID AND status=:Active) as u_a,
-                (SELECT COUNT(status) as 'user_KIV' FROM users INNER JOIN complaint ON complaint.userID = users.userID WHERE users.userID=:userID AND status=:KIV) as u_k,
                 (SELECT COUNT(complaintID) as total_complaint FROM complaint) as t, 
                 (SELECT COUNT(status) as new_complaint FROM complaint WHERE status=:New) as n, 
                 (SELECT COUNT(status) as pending_complaint FROM complaint WHERE status=:Pending) as p, 
@@ -68,7 +63,6 @@ include 'check_session.php';
         $other = "Not Relevant";
 
         $stmt = $con->prepare($query);
-        $stmt->bindParam(':userID', $current_userID);
         $stmt->bindParam(':New', $new);
         $stmt->bindParam(':Pending', $pending);
         $stmt->bindParam(':KIV', $KIV);
@@ -86,11 +80,10 @@ include 'check_session.php';
         }
 
         //pending
-        $query_user_pending = "SELECT title as pending_title, status FROM users INNER JOIN complaint ON complaint.userID = users.userID WHERE users.userID=:userID AND (status=:Pending OR status=:New) ORDER BY complaint_date DESC";
+        $query_user_pending = "SELECT title as pending_title, status FROM complaint WHERE status=:Pending OR status=:New ORDER BY complaint_date DESC";
 
         $stmt_user_pending = $con->prepare($query_user_pending);
 
-        $stmt_user_pending->bindParam(':userID', $current_userID);
         $stmt_user_pending->bindParam(':Pending', $pending);
         $stmt_user_pending->bindParam(':New', $new);
 
@@ -99,11 +92,10 @@ include 'check_session.php';
         $num_user_pending = $stmt_user_pending->rowCount();
 
         //active
-        $query_user_active = "SELECT title as active_title, status FROM users INNER JOIN complaint ON complaint.userID = users.userID WHERE users.userID=:userID AND status=:Active ORDER BY complaint_date DESC";
+        $query_user_active = "SELECT title as active_title, status FROM complaint WHERE status=:Active ORDER BY complaint_date DESC";
 
         $stmt_user_active = $con->prepare($query_user_active);
 
-        $stmt_user_active->bindParam(':userID', $current_userID);
         $stmt_user_active->bindParam(':Active', $active);
 
         $stmt_user_active->execute();
@@ -111,11 +103,10 @@ include 'check_session.php';
         $num_user_active = $stmt_user_active->rowCount();
 
         //KIV
-        $query_user_KIV = "SELECT title as KIV_title, status FROM users INNER JOIN complaint ON complaint.userID = users.userID WHERE users.userID=:userID AND status=:KIV ORDER BY complaint_date DESC";
+        $query_user_KIV = "SELECT title as KIV_title, status FROM complaint WHERE status=:KIV ORDER BY complaint_date DESC";
 
         $stmt_user_KIV = $con->prepare($query_user_KIV);
 
-        $stmt_user_KIV->bindParam(':userID', $current_userID);
         $stmt_user_KIV->bindParam(':KIV', $KIV);
 
         $stmt_user_KIV->execute();
@@ -136,8 +127,8 @@ include 'check_session.php';
             <div class="row gx-0 gx-md-5 gy-5 justify-content-center">
 
                 <div class="col-12 col-md-3">
-                    <div class="p-3 bg-white border rounded text-center">
-                        <h4 class="fw-semibold text-black text-opacity-75">Total Complaint <br> <?php echo "<p class='my-2 fs-3 text-black fw-bolder'>$total_complaint</p>" ?></h4>
+                    <div class="p-3 bg-white bg-opacity-75 border rounded text-center">
+                        <h4 class="fw-semibold text-black text-opacity-50">Total Complaint <br> <?php echo "<p class='my-2 fs-3 text-black fw-bolder'>$total_complaint</p>" ?></h4>
                     </div>
                 </div>
                 <div class="col-12 col-md-3">
@@ -146,8 +137,8 @@ include 'check_session.php';
                     </div>
                 </div>
                 <div class="col-12 col-md-3">
-                    <div class="p-3 bg-white bg-opacity-75 border rounded text-center">
-                        <h4 class="fw-semibold text-black text-opacity-50">Total Pending <br> <?php echo "<p class='my-2 fs-3 text-black text-opacity-75 fw-bolder'>$pending_complaint</p>" ?></h4>
+                    <div class="p-3 bg-white border rounded text-center">
+                        <h4 class="fw-semibold text-black text-opacity-75">Total Pending <br> <?php echo "<p class='my-2 fs-3 text-black text-opacity-75 fw-bolder'>$pending_complaint</p>" ?></h4>
                     </div>
                 </div>
                 <div class="col-12 col-md-3">
@@ -172,13 +163,13 @@ include 'check_session.php';
                 </div>
             </div>
             <div class="gx-0 gx-md-5 gy-5 mt-5">
-                <h3 class="fw-semibold text-light">User Complaints</h3>
+                <h3 class="fw-semibold text-light">Complaints</h3>
                 <div class="d-md-flex d-block align-items-center">
                     <div class="col-12 col-md-4 p-3 bg-white border rounded text-center">
-                        <h4 class="fw-semibold text-black text-opacity-75">Total Done <br> <?php echo "<p class='my-2 fs-3 text-black fw-bolder'>$user_done</p>" ?></h4>
+                        <h4 class="fw-semibold text-black text-opacity-75">Total Done <br> <?php echo "<p class='my-2 fs-3 text-black fw-bolder'>$done_complaint</p>" ?></h4>
                     </div>
                     <div class="col-12 col-md-4 ms-auto mt-md-0 mt-5 d-flex justify-content-end me-0 me-md-5">
-                    <a class="btn btn-lg btn-primary rounded text-center " href="user_complaints_create.php" role="button">Create New Complaint</a>
+                    <a class="btn btn-lg btn-primary rounded text-center " href="helpdesk_complaints_list.php" role="button">Complaint List</a>
                     </div>
                 </div>
             </div>
@@ -186,7 +177,7 @@ include 'check_session.php';
                 <div class="accordion-item">
                     <h2 class="accordion-header" id="headingOne">
                         <button class="accordion-button collapsed fs-4 fw-semibold text-black text-opacity-75" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne" aria-expanded="false" aria-controls="collapseOne">
-                            Pending <?php echo "<b class='w-bold ms-4'>$user_pending</b>" ?>
+                            Pending & New<?php echo "<b class='w-bold ms-4'>". (intval($pending_complaint) + intval($new_complaint)). "</b>" ?>
                         </button>
                     </h2>
                     <div id="collapseOne" class="accordion-collapse collapse" aria-labelledby="headingOne" data-bs-parent="#accordionExample">
@@ -208,7 +199,7 @@ include 'check_session.php';
                 <div class="accordion-item">
                     <h2 class="accordion-header" id="headingtwo">
                         <button class="accordion-button collapsed fs-4 fw-semibold text-black text-opacity-75" type="button" data-bs-toggle="collapse" data-bs-target="#collapsetwo" aria-expanded="true" aria-controls="collapsetwo">
-                            Active <?php echo "<b class='w-bold ms-4'>$user_active</b>" ?>
+                            Active <?php echo "<b class='w-bold ms-4'>$active_complaint</b>" ?>
                         </button>
                     </h2>
                     <div id="collapsetwo" class="accordion-collapse collapse" aria-labelledby="headingtwo" data-bs-parent="#accordionExample2">
@@ -230,7 +221,7 @@ include 'check_session.php';
                 <div class="accordion-item">
                     <h2 class="accordion-header" id="headingthree">
                         <button class="accordion-button collapsed fs-4 fw-semibold text-black text-opacity-75" type="button" data-bs-toggle="collapse" data-bs-target="#collapsethree" aria-expanded="true" aria-controls="collapsethree">
-                            Keep In View <?php echo "<b class='w-bold ms-4'>$user_KIV</b>" ?>
+                            Keep In View <?php echo "<b class='w-bold ms-4'>$KIV_complaint</b>" ?>
                         </button>
                     </h2>
                     <div id="collapsethree" class="accordion-collapse collapse" aria-labelledby="headingthree" data-bs-parent="#accordionExample3">
