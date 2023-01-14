@@ -57,6 +57,8 @@ include 'check_session.php';
                     echo "<div class='alert alert-success'>Record was updated.</div>";
                 } else if ($message == "no_file_found") { // if it was redirected from delete.php
                     echo "<div class='alert alert-danger'>No file uploaded for this complaints.</div>";
+                } else if ($message == "create_success") {
+                    echo "<div class='alert alert-success'>Record was created.</div>";
                 } else if ($message == "deleted") { // if it was redirected from delete.php
                     echo "<div class='alert alert-success'>Record was deleted.</div>";
                 } else {

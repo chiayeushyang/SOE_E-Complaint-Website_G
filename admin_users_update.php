@@ -19,7 +19,7 @@ ob_start();
 <body>
     <!-- NAVBAR -->
     <?php
-    include "navbar.php";
+    include "admin_navbar.php";
     ?>
     <!-- NAVBAR END -->
     <main>
